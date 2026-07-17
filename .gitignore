@@ -1,0 +1,22 @@
+.DS_Store
+*.log
+
+# Production env (secrets)
+.env.production
+
+# API (Rails)
+api/config/master.key
+api/vendor/
+api/tmp/
+api/log/
+api/storage/
+api/.env
+api/.env.*
+!api/.env.example
+
+# Web (Vue)
+web/node_modules/
+web/dist/
+web/.env
+web/.env.*
+!web/.env.example

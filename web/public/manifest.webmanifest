@@ -1,0 +1,17 @@
+{
+  "name": "BiasharaOS",
+  "short_name": "BiasharaOS",
+  "description": "Business OS for Kenyan SMEs",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
