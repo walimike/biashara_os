@@ -2,7 +2,7 @@ module Api
   module V1
     class CustomersController < BaseController
       before_action -> { require_module!("order_pad") }
-      before_action :set_customer, only: [:show, :update, :destroy]
+      before_action :set_customer, only: [ :show, :update, :destroy ]
 
       def index
         customers = current_organization.customers.ordered

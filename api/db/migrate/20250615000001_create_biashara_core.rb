@@ -4,7 +4,7 @@ class CreateBiasharaCore < ActiveRecord::Migration[7.2]
       t.string :name, null: false
       t.string :slug, null: false
       t.string :currency, null: false, default: "KES"
-      t.jsonb :enabled_modules, null: false, default: ["order_pad", "pos"]
+      t.jsonb :enabled_modules, null: false, default: [ "order_pad", "pos" ]
       t.string :plan, null: false, default: "starter"
 
       t.timestamps
@@ -20,7 +20,7 @@ class CreateBiasharaCore < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :users, [:organization_id, :email], unique: true
+    add_index :users, [ :organization_id, :email ], unique: true
     add_index :users, :email
 
     create_table :products do |t|
@@ -33,7 +33,7 @@ class CreateBiasharaCore < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :products, [:organization_id, :sku], unique: true, where: "sku IS NOT NULL"
+    add_index :products, [ :organization_id, :sku ], unique: true, where: "sku IS NOT NULL"
 
     create_table :customers do |t|
       t.references :organization, null: false, foreign_key: true
@@ -44,7 +44,7 @@ class CreateBiasharaCore < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :customers, [:organization_id, :phone]
+    add_index :customers, [ :organization_id, :phone ]
 
     create_table :orders do |t|
       t.references :organization, null: false, foreign_key: true
@@ -62,9 +62,9 @@ class CreateBiasharaCore < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :orders, [:organization_id, :order_number], unique: true
-    add_index :orders, [:organization_id, :created_at]
-    add_index :orders, [:organization_id, :status]
+    add_index :orders, [ :organization_id, :order_number ], unique: true
+    add_index :orders, [ :organization_id, :created_at ]
+    add_index :orders, [ :organization_id, :status ]
 
     create_table :order_items do |t|
       t.references :order, null: false, foreign_key: true

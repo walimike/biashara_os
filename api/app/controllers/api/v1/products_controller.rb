@@ -1,7 +1,7 @@
 module Api
   module V1
     class ProductsController < BaseController
-      before_action :set_product, only: [:show, :update, :destroy]
+      before_action :set_product, only: [ :show, :update, :destroy ]
 
       def index
         products = current_organization.products.ordered

@@ -40,9 +40,10 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version-file: api/.ruby-version
           bundler-cache: true
-          working-directory: api
+        env:
+          BUNDLE_GEMFILE: api/Gemfile
 
       - name: Prepare test database
         run: bin/rails db:prepare

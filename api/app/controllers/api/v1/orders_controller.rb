@@ -1,7 +1,7 @@
 module Api
   module V1
     class OrdersController < BaseController
-      before_action :set_order, only: [:show, :update]
+      before_action :set_order, only: [ :show, :update ]
 
       def index
         orders = current_organization.orders.includes(:customer, :order_items).recent
@@ -40,7 +40,7 @@ module Api
           params.require(:order).permit(
             :customer_id, :source, :status, :payment_method, :payment_status,
             :mpesa_reference, :notes,
-            order_items_attributes: [:id, :product_id, :name, :quantity, :unit_price_cents, :_destroy]
+            order_items_attributes: [ :id, :product_id, :name, :quantity, :unit_price_cents, :_destroy ]
           )
         end
 

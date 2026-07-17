@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
       resources :products
       resources :customers
-      resources :orders, only: [:index, :show, :create, :update]
+      resources :orders, only: [ :index, :show, :create, :update ]
     end
   end
 end
