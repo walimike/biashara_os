@@ -1,0 +1,9 @@
+# App (Vue PWA)
+{$APP_DOMAIN} {
+	reverse_proxy web:80
+}
+
+# API (Rails)
+{$API_DOMAIN} {
+	reverse_proxy api:3000
+}

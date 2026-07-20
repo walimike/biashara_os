@@ -67,36 +67,76 @@ docker compose up --build
 
 API: http://localhost:3002
 
-## Deploy (production)
+## Deploy (cheapest — ~€4/month)
 
-The monorepo deploys as **two independent services** from one GitHub repo — Rails API and Vue PWA — so you can host them on separate platforms (e.g. Render + Cloudflare Pages, or both on a VPS).
+**One VPS runs everything:** Postgres, Rails API, Vue PWA, and free HTTPS (Caddy + Let's Encrypt).
 
-### Option A — Docker Compose (VPS / single server)
+| Provider | Cost | Notes |
+|----------|------|-------|
+| [Hetzner CX22](https://www.hetzner.com/cloud) | ~€3.79/mo | Recommended — simple, reliable |
+| [Oracle Cloud Free](https://www.oracle.com/cloud/free/) | $0 | ARM VM, more setup |
+| [DigitalOcean](https://www.digitalocean.com/pricing/droplets) | ~$6/mo | Easier docs if you're new |
+
+### 1. Create a VPS
+
+Ubuntu 24.04, 2 GB RAM minimum. Open ports **80** and **443**.
+
+Install Docker on the server:
 
 ```bash
-cp .env.production.example .env.production
-# Fill in RAILS_MASTER_KEY, SECRET_KEY_BASE, and public URLs
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+```
 
+### 2. Point DNS at the VPS
+
+| Record | Host | Value |
+|--------|------|-------|
+| A | `app` | VPS IP |
+| A | `api` | VPS IP |
+
+Example: `app.yourdomain.com` and `api.yourdomain.com`.
+
+### 3. Deploy
+
+On the VPS, clone the repo and run:
+
+```bash
+git clone https://github.com/walimike/biashara_os.git
+cd biashara_os
+cp .env.production.example .env.production
+```
+
+Edit `.env.production`:
+
+| Variable | Example |
+|----------|---------|
+| `APP_DOMAIN` | `app.yourdomain.com` |
+| `API_DOMAIN` | `api.yourdomain.com` |
+| `VITE_API_URL` | `https://api.yourdomain.com/api/v1` |
+| `CORS_ORIGINS` | `https://app.yourdomain.com` |
+| `RAILS_MASTER_KEY` | output of `cat api/config/master.key` (from your machine) |
+| `SECRET_KEY_BASE` | output of `cd api && bin/rails secret` |
+| `DB_PASSWORD` | long random string |
+
+```bash
+chmod +x scripts/deploy-vps.sh
+./scripts/deploy-vps.sh
+```
+
+- **App:** https://app.yourdomain.com
+- **API health:** https://api.yourdomain.com/up
+
+Caddy obtains and renews SSL certificates automatically.
+
+### Updates
+
+```bash
+git pull
 docker compose -f docker-compose.prod.yml --env-file .env.production up --build -d
 ```
 
-- PWA: http://localhost:8080 (or `WEB_PORT`)
-- API: http://localhost:3000 (or `API_PORT`)
-
-Set `VITE_API_URL` to the **browser-facing** API URL before building the web image. Set `CORS_ORIGINS` to the **public PWA URL**.
-
-### Option B — Split hosting
-
-| Service | Build | Typical hosts |
-|---------|-------|---------------|
-| **API** | `api/Dockerfile` | Render, Railway, Fly.io, Kamal |
-| **Web** | `web/Dockerfile` | Any static host, or nginx container |
-
-Web build arg: `VITE_API_URL=https://api.yourdomain.com/api/v1`
-
-API env: `DATABASE_URL`, `RAILS_MASTER_KEY`, `SECRET_KEY_BASE`, `CORS_ORIGINS`
-
-GitHub repo: [walimike/biashara_os](https://github.com/walimike/biashara_os) (private)
+GitHub repo: [walimike/biashara_os](https://github.com/walimike/biashara_os) (public)
 
 ## Roadmap
 
